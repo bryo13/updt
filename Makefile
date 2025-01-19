@@ -1,12 +1,12 @@
 CC = gcc
 CFLAGS = -g -Wall -pedantic -Wextra
 
-testrunner: homedir.o tests.o
+testrunner: store_location.o tests.o
 	$(CC) $(CFLAGS) -o testrunner tests.o -lcriterion
 
-homedir.o: src/homedir.c
-	$(CC) $(CFLAGS) -c src/homedir.c
-
+store_location.o: src/store_location.c
+	$(CC) $(CFLAGS) -c src/store_location.c
+	
 tests.o: tests/tests.c
 	$(CC) $(CFLAGS) -c tests/tests.c
 
