@@ -21,17 +21,15 @@ char *homepath() {
 }
 
 // will host data file in home dir
-bool create_location() {
-    // char *home = homepath();
-    char *home = (char*)malloc(30 * sizeof(char));
+char *create_location() {
+    char *home = (char*)malloc(10 * sizeof(char));
     home = homepath();
-    char path[30] = "/.updt";
+    char path[] = "/.updt";
     strcat(home, path);
-    printf("%s\n",home);
 
     if (mkdir(home, 0755) == 0){
-        return true;
+        return home;
     }
 
-    return false;
+    return " ";
 }

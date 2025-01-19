@@ -8,5 +8,5 @@ Test(store_location, TestHomeDir) {
 }
 
 Test(store_location, TestMakeDir) {
-	cr_assert_eq(create_location(), 0, "Got %d wanted 0",create_location());
+	cr_assert_neq(create_location(), " ", "Should not return empty string but /home/brian/.updt");
 }
