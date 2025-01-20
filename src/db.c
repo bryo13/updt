@@ -21,7 +21,7 @@
 #include <sqlite3.h>
 #include <string.h>
 
-#include "store_location.h"
+#include "./includes/store_location.h"
 
 void create_db() {
     char *dbpath = create_location();
