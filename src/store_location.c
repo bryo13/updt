@@ -27,9 +27,12 @@ char *create_location() {
     char path[] = "/.updt";
     strcat(home, path);
 
+    struct stat sbuf;
+    if (stat(home, &sbuf) == 0) {
+    	return home;
+    }
+    
     if (mkdir(home, 0755) == 0){
         return home;
     }
-
-    return " ";
 }
