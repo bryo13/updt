@@ -17,4 +17,4 @@ tests.o: tests/tests.c
 	$(CC) $(CFLAGS) -c tests/tests.c
 
 clean:
-	rm -f *.o testrunner
+	rm -f -r *.o testrunner /home/brian/.updt
