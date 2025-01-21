@@ -23,6 +23,7 @@
 #include "./includes/store_location.h"
 
 int isPathValid(char *path);
+int isPathAlreadyWatched(char *path, char *fileLocation);
 
 // writes location/s to watch
 void writeArgs(int argCount, char *argVect[]) {
@@ -63,11 +64,18 @@ void writeArgs(int argCount, char *argVect[]) {
     for (int i=1; i<argCount; i++) {
         strcat(argsLocation, argVect[i]);
         int valid = isPathValid(argsLocation);
-        if(valid != 0) {
+        if (valid != 0)  {
             printf("- \033[31m%s does not exist\033[0m\n", argsLocation);
+            strcpy(argsLocation, OriginalState);
             continue;
         }
-        printf("- %s does exist\n", argsLocation);
+
+        if (isPathAlreadyWatched(argsLocation, argsStorePath) != 0) {
+            printf("- \033[31m%s already watched\033[0m\n", argsLocation);
+            strcpy(argsLocation, OriginalState);
+            continue;
+        }
+        printf("- %s set to be watched\n", argsLocation);
         fprintf(file,"%s\n", argsLocation);
         strcpy(argsLocation, OriginalState);
     }
@@ -81,4 +89,32 @@ int isPathValid(char *path) {
         return 0;
     }
     return 1;
+}
+
+// check if file is already checked
+int isPathAlreadyWatched(char *path, char *fileLocation) {
+    FILE *file;
+    char *read = (char*)malloc(8 * sizeof(char));
+    if (read == NULL) {
+        perror("error mem alloc for read watch file");
+        return 1;
+    }
+    if ((file = fopen(fileLocation, "r")) == NULL) {
+        perror("error getting watch file");
+        return 1;
+    }
+
+    while(fgets(read, sizeof(read),file) != NULL) {
+        if(strcmp(read, path) != 0) {
+		printf("%s is already watched\n",path);
+		return 1;
+	}
+    }
+    	if (fclose(file) != 0) {
+		perror("Error closing file");
+		return EXIT_FAILURE;
+	}
+
+	return 0;
+
 }
