@@ -15,11 +15,14 @@
  *   Organization:  
  *
  * =====================================================================================
- */
+*/
+#include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include "./includes/store_location.h"
+
+int isPathValid(char *path);
 
 // writes location/s to watch
 void writeArgs(int argCount, char *argVect[]) {
@@ -47,10 +50,35 @@ void writeArgs(int argCount, char *argVect[]) {
         exit(2);
     }
 
+    // original state of the string to avoid appending in every iter 
+    char *OriginalState = (char *)malloc(strlen(argsLocation) * 10);
+    if (argsLocation == NULL) {
+        perror("Error allocating args store path str");
+        exit(2);
+    }
+
     strcpy(argsLocation, home);
+    strcat(argsLocation, "/");
+    strcpy(OriginalState, argsLocation);
     for (int i=1; i<argCount; i++) {
         strcat(argsLocation, argVect[i]);
+        int valid = isPathValid(argsLocation);
+        if(valid != 0) {
+            printf("- \033[31m%s does not exist\033[0m\n", argsLocation);
+            continue;
+        }
+        printf("- %s does exist\n", argsLocation);
         fprintf(file,"%s\n", argsLocation);
+        strcpy(argsLocation, OriginalState);
     }
     fclose(file);
+}
+
+// check if path is valid
+int isPathValid(char *path) {
+    struct stat sbuf;
+    if (stat(path, &sbuf) == 0) {
+        return 0;
+    }
+    return 1;
 }
