@@ -1,8 +1,14 @@
 CC = gcc
 CFLAGS = -g -Wall -pedantic -Wextra
 
-testrunner: store_location.o db.o db.o args.o tests.o
-	$(CC) $(CFLAGS) -o testrunner tests.o -lcriterion -lsqlite3
+test: store_location.o db.o args.o tests.o
+	$(CC) $(CFLAGS) -o test tests.o -lcriterion -lsqlite3
+
+build: main.o
+	$(CC) $(CFLAGS) -o updt main.o -lsqlite3
+
+main.o: src/main.c
+	$(CC) $(CFLAGS) -c src/main.c
 
 store_location.o: src/includes/store_location.h
 	$(CC) $(CFLAGS) -c src/includes/store_location.h
@@ -17,4 +23,4 @@ tests.o: tests/tests.c
 	$(CC) $(CFLAGS) -c tests/tests.c
 
 clean:
-	rm -f -r *.o testrunner /home/brian/.updt
+	rm -f -r *.o test updt /home/brian/.updt
