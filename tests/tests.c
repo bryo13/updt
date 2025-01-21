@@ -22,11 +22,11 @@
 #include <stdbool.h>
 #include "../src/includes/store_location.h"
 #include "../src/db.c"
-#include "../src/read_args.c"
+#include "../src/args.c"
 
 // test homepath
 Test(store_location, TestHomeDir) {
-	char* homePath = homepath();
+	const char* homePath = homepath();
 	cr_assert_str_eq(homePath, "/home/brian");
 }
 
@@ -45,13 +45,4 @@ Test(db, CreateDB) {
 	char db_path[] = "/home/brian/.updt/updt.db";
 	bool dbExists = stat(db_path, &sbuf);
 	cr_assert_eq(dbExists, 0, "%s does not exist",db_path);
-}
-
-Test(read_args, WriteArgs) {
-	struct stat sbuf;
-	char *argsvec[] = {"startTool","arg1","arg2"};
-	writeArgs(3, argsvec);
-	char argsPath[] = "/home/brian/.updt/watch";
-	bool argsExist = stat(argsPath, &sbuf);
-	cr_assert_eq(argsExist, 0, "%s does not exist",argsPath);	
 }

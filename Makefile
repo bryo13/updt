@@ -1,14 +1,14 @@
 CC = gcc
 CFLAGS = -g -Wall -pedantic -Wextra
 
-testrunner: store_location.o db.o db.o read_args.o tests.o
+testrunner: store_location.o db.o db.o args.o tests.o
 	$(CC) $(CFLAGS) -o testrunner tests.o -lcriterion -lsqlite3
 
 store_location.o: src/includes/store_location.h
 	$(CC) $(CFLAGS) -c src/includes/store_location.h
 	
-read_args.o: src/read_args.c
-	$(CC) $(CFLAGS) -c src/read_args.c
+args.o: src/args.c
+	$(CC) $(CFLAGS) -c src/args.c
 
 db.o: src/db.c
 	$(CC) $(CFLAGS) -c src/db.c

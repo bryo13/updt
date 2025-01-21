@@ -24,15 +24,22 @@
 #include "./includes/store_location.h"
 
 void create_db() {
-    char *dbpath = create_location();
-    strcat(dbpath, "/updt.db");
+    const char *dbpath = create_location();
+    char *dbLocation = (char *)malloc(strlen(dbpath) + 10);
+    if (dbLocation == NULL) {
+        perror("Error allocating db store path str");
+        exit(2);
+    }
+    strcpy(dbLocation, dbpath);
+    strcat(dbLocation, "/updt.db");
     sqlite3 *db;
 
-    if (sqlite3_open(dbpath, &db) != SQLITE_OK) {
+    if (sqlite3_open(dbLocation, &db) != SQLITE_OK) {
         fprintf(stdout, "Error opening db conn: %s\n",sqlite3_errmsg(db));
         exit(2);
     } else {
         printf("connection est.\n");
     }
     sqlite3_close(db);
+    free(dbLocation);
 }
