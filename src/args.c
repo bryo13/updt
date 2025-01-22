@@ -64,17 +64,11 @@ void writeArgs(int argCount, char *argVect[]) {
     for (int i=1; i<argCount; i++) {
         strcat(argsLocation, argVect[i]);
         int valid = isPathValid(argsLocation);
-        if (valid != 0)  {
-            printf("- \033[31m%s does not exist\033[0m\n", argsLocation);
+        if ((valid != 0) || (isPathAlreadyWatched(argsLocation, argsStorePath) != 0)) {        
             strcpy(argsLocation, OriginalState);
             continue;
         }
 
-        if (isPathAlreadyWatched(argsLocation, argsStorePath) != 0) {
-            printf("- \033[31m%s already watched\033[0m\n", argsLocation);
-            strcpy(argsLocation, OriginalState);
-            continue;
-        }
         printf("- %s set to be watched\n", argsLocation);
         fprintf(file,"%s\n", argsLocation);
         strcpy(argsLocation, OriginalState);
@@ -88,6 +82,7 @@ int isPathValid(char *path) {
     if (stat(path, &sbuf) == 0) {
         return 0;
     }
+    printf("- \033[31m%s does not exist\033[0m\n", path);
     return 1;
 }
 
@@ -106,7 +101,7 @@ int isPathAlreadyWatched(char *path, char *fileLocation) {
 
     while(fgets(read, sizeof(read),file) != NULL) {
         if(strcmp(read, path) != 0) {
-		printf("%s is already watched\n",path);
+		printf("- \033[31m%s already watched\033[0m\n", path);
 		return 1;
 	}
     }
