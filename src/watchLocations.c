@@ -58,13 +58,15 @@ void traverseSingle(char *path) {
 			}
 
 			snprintf(pth, sizeof(pth),"%s/%s",path,entry->d_name);
-			// insert into table
+			// insert into table intead of printing
 			printf("%s\n",pth);
+			traverseSingle(pth);
 		} else {
+			// insert into table intead of printing
 			printf("%s\n", entry->d_name);
 		}
 	}
-closedir(dir);
+	closedir(dir);
 }
 
 
