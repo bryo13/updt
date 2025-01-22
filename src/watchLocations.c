@@ -24,23 +24,47 @@
 // returns array with paths to traverse
 char **returnPath()
 {
-    char **path = (char *)malloc(16384 * sizeof(char));
-    return path;
+	char **path = (char *)malloc(16384 * sizeof(char));
+	return path;
 }
 
-// traverse file system
+// traverse all watch locations
 // gets input from returnPath()
 // save in db
-void traverse(char **paths)
+void traverseAll(char **paths)
 {
-    DIR *dir;
-    struct dirent entry;
-    int len = sizeof(paths) / sizeof(paths[0]);
-    for (int i = 0; i < len; i++)
-    {
-        if (!(dir = opendir(paths[i])))
-        {
-            return;
-        }
-    }
+	int len = sizeof(paths) / sizeof(paths[0]);
+	for (int i = 0; i < len; i++)
+	{
+		traverseSingle(paths[i]);
+	}
+}
+
+// traverse single location from the watch
+// gets a single path from traverse all
+void traverseSingle(char *path) {
+	DIR *dir;
+	struct dirent entry;	
+
+	if (!(dir = opendir(path)))
+	{
+		return;
+	}
+	while((entry = readdir(dir)) != NULL) {
+		if (entry->d_type == DT_DIR) {
+			char pth[5860];
+			if(strcmp(entry->d_name,".") == 0 || strcmp(entry ->d_name, "..") == 0) {
+				continue;
+			}
+
+			snprintf(pth, sizeof(pth),"%s/%s",path,entry->d_name);
+			// insert into table
+			printf("%s\n",pth);
+		} else {
+			printf("%s\n", entry->d_name);
+		}
+	}
+}
+
+closedir(dir);
 }
