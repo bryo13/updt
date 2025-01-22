@@ -2,7 +2,8 @@
 #include "db.c"
 #include "args.c"
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     create_db();
-	writeArgs(argc, argv);
+    writeArgs(argc, argv);
 }

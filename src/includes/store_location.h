@@ -11,8 +11,8 @@
  *       Revision:  none
  *       Compiler:  gcc
  *
- *         Author:  Brian_Tum(), 
- *   Organization:  
+ *         Author:  Brian_Tum(),
+ *   Organization:
  *
  * =====================================================================================
  */
@@ -27,43 +27,51 @@
 #include <sys/stat.h>
 
 // returns home dir
-const char* homepath() {
+const char *homepath()
+{
 	char *homedir = NULL;
-	#ifdef __linux__
-		homedir = getenv("HOME");
-	#else
-		printf("Not linux system\n");	
-	#endif
+#ifdef __linux__
+	homedir = getenv("HOME");
+#else
+	printf("Not linux system\n");
+#endif
 
-	if (homedir) {
+	if (homedir)
+	{
 		return homedir;
-	} else {
+	}
+	else
+	{
 		perror("Couldnt find getenv HOME\n");
 	}
 	return NULL;
 }
 
 // will host data file in home dir
-const char* create_location() {
-    const char *home = homepath();
-	char *store = (char*)malloc(strlen(home) + 1);
-	if (store == NULL) {
+const char *create_location()
+{
+	const char *home = homepath();
+	char *store = (char *)malloc(strlen(home) + 1);
+	if (store == NULL)
+	{
 		perror("Error mem allocation");
 		exit(2);
 	}
-	
+
 	strcpy(store, home);
 	strcat(store, "/.updt");
 
 	struct stat sbuf;
-	if (stat(store, &sbuf) == 0) {
+	if (stat(store, &sbuf) == 0)
+	{
 		return store;
 	}
-		
-	if (mkdir(store, 0755) == 0){
+
+	if (mkdir(store, 0755) == 0)
+	{
 		return store;
 	}
-    return NULL;
+	return NULL;
 }
 
 #endif

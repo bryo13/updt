@@ -11,8 +11,8 @@
  *       Revision:  none
  *       Compiler:  gcc
  *
- *         Author:  Brian_Tum(), 
- *   Organization:  
+ *         Author:  Brian_Tum(),
+ *   Organization:
  *
  * =====================================================================================
  */
@@ -25,24 +25,27 @@
 #include "../src/args.c"
 
 // test homepath
-Test(store_location, TestHomeDir) {
-	const char* homePath = homepath();
+Test(store_location, TestHomeDir)
+{
+	const char *homePath = homepath();
 	cr_assert_str_eq(homePath, "/home/brian");
 }
 
-Test(store_location, TestMakeDir) {
+Test(store_location, TestMakeDir)
+{
 	struct stat sbuf;
 	create_location();
 	char path[] = "/home/brian/.updt";
 
 	bool dirExists = stat(path, &sbuf);
-	cr_assert_eq(dirExists, 0, "%s does not exist",path);
+	cr_assert_eq(dirExists, 0, "%s does not exist", path);
 }
 
-Test(db, CreateDB) {
+Test(db, CreateDB)
+{
 	struct stat sbuf;
 	create_db();
 	char db_path[] = "/home/brian/.updt/updt.db";
 	bool dbExists = stat(db_path, &sbuf);
-	cr_assert_eq(dbExists, 0, "%s does not exist",db_path);
+	cr_assert_eq(dbExists, 0, "%s does not exist", db_path);
 }
