@@ -64,7 +64,7 @@ void traverseSingle(char *path) {
 			printf("%s\n", entry->d_name);
 		}
 	}
-}
-
 closedir(dir);
 }
+
+
