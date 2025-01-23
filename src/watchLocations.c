@@ -28,6 +28,8 @@ void traverseAll();
 void traverseSingle(char *path);
 char *loc();
 
+static int file_count = 0;
+
 // read watch file
 // returns array with paths to traverse
 char **returnPath() {
@@ -98,6 +100,7 @@ void traverseAll()
 	{
 		traverseSingle(paths[i]);
 	}
+	printf("noted %d files\n",file_count);
 }
 
 // traverse single location from the watch
@@ -126,6 +129,7 @@ void traverseSingle(char *path) {
 		// insert into table intead of printing
 		if (S_ISREG(st.st_mode)) {
 			printf("%s\n",pth);
+			file_count++;
 		}
 		if (S_ISDIR(st.st_mode)) {
 			traverseSingle(pth);
