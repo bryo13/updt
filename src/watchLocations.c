@@ -14,26 +14,85 @@
  *   Organization:
  *
  * =====================================================================================
- */
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <dirent.h>
+#include "./includes/store_location.h"
+
+char **returnPath();
+void traverseAll();
+void traverseSingle();
+char *loc();
 
 // read watch file
 // returns array with paths to traverse
-char **returnPath()
-{
-	char **path = (char *)malloc(16384 * sizeof(char));
-	return path;
+char **returnPath() {
+	FILE *file;
+	char *lc = loc();
+	int count = 0;
+	int capacity = 13;
+	char buffer[124]; // hold a single line
+	char **paths = NULL;
+
+	file = fopen(lc, "r");
+	if (file == NULL) {
+		perror("error opening watch file");
+		return NULL;
+	}
+	paths = malloc(capacity * sizeof(char*));
+	if (paths == NULL) {
+		perror("err allc ary");
+		fclose(file);
+		return NULL;
+	}
+
+	while(fgets(buffer, sizeof(buffer), file)) {
+		size_t len = strlen(buffer);
+		if (((int)len >= 0) && (buffer[(int)len - 1] == '\n')) {
+			buffer[len - 1] = '\0';		
+		}
+
+		paths[count] = (char*)malloc((len + 1) * sizeof(char));
+		if (paths[count] == NULL) {
+			perror("err allc ary");
+			for (int i=0;i<count;i++) {
+				free(paths[i]);
+			}
+			free(paths);
+			fclose(file);
+			return NULL;
+		}
+		strcpy(paths[count], buffer);
+		count++;
+
+		if (count >= capacity) {
+			capacity *= 2;
+			paths = realloc(paths, capacity * sizeof(char*));
+			if (paths == NULL) {		
+				perror("error allc mem");
+				for(int i = 0; i< count; i++) {
+					free(paths[i]);
+				}
+				free(paths);
+				fclose(file);
+				return NULL;
+			}
+		}
+	}
+	fclose(file);
+	return paths;
 }
 
 // traverse all watch locations
 // gets input from returnPath()
 // save in db
-void traverseAll(char **paths)
+void traverseAll()
 {
-	int len = sizeof(paths) / sizeof(paths[0]);
+	char **paths = returnPath();
+	size_t len = sizeof(paths) / sizeof(paths[0]);
 	for (int i = 0; i < len; i++)
 	{
 		traverseSingle(paths[i]);
@@ -44,7 +103,7 @@ void traverseAll(char **paths)
 // gets a single path from traverse all
 void traverseSingle(char *path) {
 	DIR *dir;
-	struct dirent entry;	
+	struct dirent *entry;	
 
 	if (!(dir = opendir(path)))
 	{
@@ -69,4 +128,16 @@ void traverseSingle(char *path) {
 	closedir(dir);
 }
 
+// read path from createLocation()
+char *loc() {
+	const char *location = create_location();
+	char *lc = (char*)malloc(13 * sizeof(char));
+	if (lc == NULL) {
+		perror("err mem alloc");
+		return NULL;
+	}
 
+	strcpy(lc, location);
+	strcat(lc, "/watch");
+	return lc;
+}
