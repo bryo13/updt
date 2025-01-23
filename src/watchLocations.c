@@ -20,11 +20,12 @@
 #include <stdio.h>
 #include <string.h>
 #include <dirent.h>
+#include <sys/stat.h>
 #include "./includes/store_location.h"
 
 char **returnPath();
 void traverseAll();
-void traverseSingle();
+void traverseSingle(char *path);
 char *loc();
 
 // read watch file
@@ -104,26 +105,32 @@ void traverseAll()
 void traverseSingle(char *path) {
 	DIR *dir;
 	struct dirent *entry;	
-
+	struct stat st;
+	
 	if (!(dir = opendir(path)))
 	{
 		return;
 	}
 	while((entry = readdir(dir)) != NULL) {
-		if (entry->d_type == DT_DIR) {
-			char pth[5860];
-			if(strcmp(entry->d_name,".") == 0 || strcmp(entry ->d_name, "..") == 0) {
-				continue;
-			}
-
-			snprintf(pth, sizeof(pth),"%s/%s",path,entry->d_name);
-			// insert into table intead of printing
-			printf("%s\n",pth);
-			traverseSingle(pth);
-		} else {
-			// insert into table intead of printing
-			printf("%s\n", entry->d_name);
+		if(strcmp(entry->d_name,".") == 0 || strcmp(entry ->d_name, "..") == 0) {
+			continue;
 		}
+
+		char pth[1024];
+		snprintf(pth, sizeof(pth),"%s/%s",path,entry->d_name);
+		
+		if (stat(pth, &st) != 0) {
+			perror("file stat error");
+			continue;
+		}
+		// insert into table intead of printing
+		if (S_ISREG(st.st_mode)) {
+			printf("%s\n",pth);
+		}
+		if (S_ISDIR(st.st_mode)) {
+			traverseSingle(pth);
+		}
+		 
 	}
 	closedir(dir);
 }
