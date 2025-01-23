@@ -94,8 +94,13 @@ char **returnPath() {
 // save in db
 void traverseAll()
 {
+	int len = 0;
 	char **paths = returnPath();
-	size_t len = sizeof(paths) / sizeof(paths[0]);
+
+	while(paths[len] != NULL) {
+		len++;
+	}
+
 	for (int i = 0; i < len; i++)
 	{
 		traverseSingle(paths[i]);
