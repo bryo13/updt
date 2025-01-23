@@ -58,7 +58,7 @@ static void create_compfile_table(sqlite3 *db_conn) {
         return;
     }
 
-    const char *table_sql = "CREATE TABLE IF NOT EXISTS compfilespaths('id integer PRIMARY KEY AUTOINCREMENT, path text, data_modified text')";
+    const char *table_sql = "CREATE TABLE IF NOT EXISTS compfilespaths('id integer PRIMARY KEY AUTOINCREMENT, path text, data_modified integer')";
 
     if (sqlite3_exec(db_conn, table_sql, 0, 0, &err_msg) != SQLITE_OK) {
         fprintf(stdout, "Error opening db conn: %s\n", err_msg);
@@ -77,7 +77,7 @@ static void create_backuped_file_table(sqlite3 *db_conn) {
         return;
     }
 
-    const char *table_sql = "CREATE TABLE IF NOT EXISTS backedfiles('id integer PRIMARY KEY AUTOINCREMENT, path text, data_modified text')";
+    const char *table_sql = "CREATE TABLE IF NOT EXISTS backedfiles('id integer PRIMARY KEY AUTOINCREMENT, path text, data_modified integer')";
 
     if (sqlite3_exec(db_conn, table_sql, 0, 0, &err_msg) != SQLITE_OK) {
         fprintf(stdout, "Error opening db conn: %s\n", err_msg);
