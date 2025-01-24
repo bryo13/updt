@@ -27,9 +27,12 @@
 #include <sys/stat.h>
 
 // returns home dir
-const char *homepath()
-{
-	char *homedir = NULL;
+const char *homepath() {
+	char *homedir = (char*)malloc(30 * sizeof(char));
+	if (homedir == NULL) {
+		perror("err mem allc for homedir path");
+		return NULL;
+	}
 #ifdef __linux__
 	homedir = getenv("HOME");
 #else
@@ -48,12 +51,15 @@ const char *homepath()
 }
 
 // will host data file in home dir
-const char *create_location()
-{
+const char *create_location() {
 	const char *home = homepath();
-	char *store = (char *)malloc(strlen(home) + 1);
-	if (store == NULL)
-	{
+	if (home == NULL) {
+		perror("err getting home path");
+		exit(2);
+	}
+
+	char *store = (char *)malloc(30 * strlen(home));
+	if (store == NULL){
 		perror("Error mem allocation");
 		exit(2);
 	}
@@ -62,15 +68,14 @@ const char *create_location()
 	strcat(store, "/.updt");
 
 	struct stat sbuf;
-	if (stat(store, &sbuf) == 0)
-	{
+	if (stat(store, &sbuf) == 0){
 		return store;
 	}
 
-	if (mkdir(store, 0755) == 0)
-	{
+	if (mkdir(store, 0755) == 0){
 		return store;
 	}
+
 	return NULL;
 }
 

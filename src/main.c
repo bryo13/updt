@@ -1,5 +1,5 @@
 #include <stdlib.h>
-#include "db.c"
+#include "./includes/db.h"
 #include "args.c"
 #include "watchLocations.c"
 

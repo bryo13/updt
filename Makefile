@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -g -Wall -pedantic -Wextra
+CFLAGS = -g -Wall -pedantic -Wextra 
 
 test: store_location.o db.o args.o tests.o
 	$(CC) $(CFLAGS) -o test tests.o -lcriterion -lsqlite3

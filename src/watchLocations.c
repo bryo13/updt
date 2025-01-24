@@ -22,10 +22,11 @@
 #include <dirent.h>
 #include <sys/stat.h>
 #include "./includes/store_location.h"
+#include "./includes/db.h"
 
 char **returnPath();
 void traverseAll();
-void traverseSingle(char *path);
+void traverseSingle(sqlite3 *conn, char *path);
 char *loc();
 
 static int file_count = 0;
@@ -86,14 +87,15 @@ char **returnPath() {
 		}
 	}
 	fclose(file);
+	free(lc);
 	return paths;
 }
 
 // traverse all watch locations
 // gets input from returnPath()
 // save in db
-void traverseAll()
-{
+void traverseAll() {
+	sqlite3 *conn = open_db();
 	int len = 0;
 	char **paths = returnPath();
 
@@ -101,19 +103,20 @@ void traverseAll()
 		len++;
 	}
 
-	for (int i = 0; i < len; i++)
-	{
-		traverseSingle(paths[i]);
+	for (int i = 0; i < len; i++) {
+		traverseSingle(conn, paths[i]);
 	}
+	sqlite3_close(conn);
 	printf("noted %d files\n",file_count);
 }
 
 // traverse single location from the watch
 // gets a single path from traverse all
-void traverseSingle(char *path) {
+void traverseSingle(sqlite3 *conn, char *path) {
 	DIR *dir;
 	struct dirent *entry;	
 	struct stat st;
+
 	
 	if (!(dir = opendir(path)))
 	{
@@ -133,11 +136,12 @@ void traverseSingle(char *path) {
 		}
 		// insert into table intead of printing
 		if (S_ISREG(st.st_mode)) {
-			printf("%s\n",pth);
+			//printf("%s\n",pth);
+			insert_compfiles(conn, pth,&st.st_mtime, (double)st.st_size/(1024 * 1024));
 			file_count++;
 		}
 		if (S_ISDIR(st.st_mode)) {
-			traverseSingle(pth);
+			traverseSingle(conn, pth);
 		}
 		 
 	}

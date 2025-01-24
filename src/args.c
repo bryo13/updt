@@ -26,29 +26,31 @@ int isPathValid(char *path);
 int isPathAlreadyWatched(char *path, char *fileLocation);
 
 // writes location/s to watch
-void writeArgs(int argCount, char *argVect[])
-{
+void writeArgs(int argCount, char *argVect[]) {
     const char *path = create_location();
     const char *home = homepath();
+
+    if ((path == NULL) || (home == NULL)) {
+        perror("error getting home path");
+        exit(2);
+    }
     FILE *file;
 
     /// location to store records to be watched
-    char *argsStorePath = (char *)malloc(strlen(path) * 10);
-    if (argsStorePath == NULL)
-    {
+    char *argsStorePath = (char *)malloc(strlen(path) * 128);
+    if (argsStorePath == NULL) {
         perror("Error allocating args store path str");
         exit(2);
     }
     strcpy(argsStorePath, path);
     strcat(argsStorePath, "/watch");
-    if ((file = fopen(argsStorePath, "a")) == NULL)
-    {
+    if ((file = fopen(argsStorePath, "a")) == NULL){
         perror("Error opening file");
         return;
     }
 
     // location user wants to watch
-    char *argsLocation = (char *)malloc(strlen(home) * 10);
+    char *argsLocation = (char *)malloc(strlen(home) * 120);
     if (argsLocation == NULL)
     {
         perror("Error allocating args store path str");
@@ -56,7 +58,7 @@ void writeArgs(int argCount, char *argVect[])
     }
 
     // original state of the string to avoid appending in every iter
-    char *OriginalState = (char *)malloc(strlen(argsLocation) * 10);
+    char *OriginalState = (char *)malloc(strlen(argsLocation) * 128);
     if (argsLocation == NULL)
     {
         perror("Error allocating args store path str");
@@ -81,6 +83,9 @@ void writeArgs(int argCount, char *argVect[])
         strcpy(argsLocation, OriginalState);
     }
     fclose(file);
+    free(argsStorePath);
+    free(argsLocation);
+    free(OriginalState);
 }
 
 // check if path is valid
@@ -99,7 +104,7 @@ int isPathValid(char *path)
 int isPathAlreadyWatched(char *path, char *fileLocation)
 {
     FILE *file;
-    char *read = (char *)malloc(8 * sizeof(char));
+    char *read = (char *)malloc(128 * sizeof(char));
     if (read == NULL)
     {
         perror("error mem alloc for read watch file");
@@ -125,5 +130,6 @@ int isPathAlreadyWatched(char *path, char *fileLocation)
         return EXIT_FAILURE;
     }
 
+    free(read);
     return 0;
 }
