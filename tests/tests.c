@@ -21,8 +21,8 @@
 #include <sys/stat.h>
 #include <stdbool.h>
 #include "../src/includes/store_location.h"
-#include "../src/db.c"
-#include "../src/args.c"
+#include "../src/includes/db.h"
+#include "../src/watch_args.c"
 
 // test homepath
 Test(store_location, TestHomeDir)

@@ -4,6 +4,7 @@
  *       Filename:  read_args.c
  *
  *    Description: reads and write args from stdin
+ *                  to file
  *
  *
  *        Version:  1.0
@@ -11,7 +12,7 @@
  *       Revision:  none
  *       Compiler:  gcc
  *
- *         Author:  YOUR NAME (),
+ *         Author:  Brian_Tum(),
  *   Organization:
  *
  * =====================================================================================
@@ -24,6 +25,7 @@
 
 int isPathValid(char *path);
 int isPathAlreadyWatched(char *path, char *fileLocation);
+void writeArgs(int argCount, char *argVect[]);
 
 // writes location/s to watch
 void writeArgs(int argCount, char *argVect[]) {
@@ -68,11 +70,12 @@ void writeArgs(int argCount, char *argVect[]) {
     strcpy(argsLocation, home);
     strcat(argsLocation, "/");
     strcpy(OriginalState, argsLocation);
-    for (int i = 1; i < argCount; i++)
+    for (int i = 2; i < argCount; i++)
     {
         strcat(argsLocation, argVect[i]);
-        int valid = isPathValid(argsLocation);
-        if ((valid != 0) || (isPathAlreadyWatched(argsLocation, argsStorePath) != 0))
+        int path_valid = isPathValid(argsLocation);
+        int is_path_watched = isPathAlreadyWatched(argsLocation, argsStorePath);
+        if ((path_valid != 0) || (is_path_watched != 0))
         {
             strcpy(argsLocation, OriginalState);
             continue;
@@ -101,35 +104,29 @@ int isPathValid(char *path)
 }
 
 // check if file is already checked
-int isPathAlreadyWatched(char *path, char *fileLocation)
-{
+int isPathAlreadyWatched(char *path, char *fileLocation) {
     FILE *file;
-    char *read = (char *)malloc(128 * sizeof(char));
-    if (read == NULL)
-    {
-        perror("error mem alloc for read watch file");
-        return 1;
-    }
-    if ((file = fopen(fileLocation, "r")) == NULL)
-    {
+
+    char read[256]; 
+
+    if ((file = fopen(fileLocation, "r")) == NULL) {
         perror("error getting watch file");
         return 1;
     }
 
-    while (fgets(read, sizeof(read), file) != NULL)
-    {
-        if (strcmp(read, path) != 0)
-        {
+    while (fgets(read, sizeof(read), file) != NULL){
+        read[strcspn(read,"\n")] = '\0';
+
+        int cmp = strcmp(read, path);
+        if (cmp == 0){
             printf("- \033[31m%s already watched\033[0m\n", path);
             return 1;
         }
     }
-    if (fclose(file) != 0)
-    {
+    if (fclose(file) != 0){
         perror("Error closing file");
         return EXIT_FAILURE;
     }
 
-    free(read);
-    return 0;
+    return EXIT_SUCCESS;
 }

@@ -27,7 +27,7 @@
 #include <sys/stat.h>
 
 // returns home dir
-const char *homepath() {
+const char *homepath(void) {
 	char *homedir = (char*)malloc(30 * sizeof(char));
 	if (homedir == NULL) {
 		perror("err mem allc for homedir path");
@@ -51,7 +51,7 @@ const char *homepath() {
 }
 
 // will host data file in home dir
-const char *create_location() {
+const char *create_location(void) {
 	const char *home = homepath();
 	if (home == NULL) {
 		perror("err getting home path");
@@ -77,6 +77,11 @@ const char *create_location() {
 	}
 
 	return NULL;
+}
+
+// write backup location
+char *backup_location(void) {
+	return "";
 }
 
 #endif

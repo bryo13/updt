@@ -71,13 +71,12 @@ static void create_compfile_table(sqlite3 *db_conn) {
         fprintf(stdout, "Error opening db conn: %s\n", err_msg);
         return;
     }
-    printf("file table created");
 
 }
 
 // create backuped files
 static void create_backuped_file_table(sqlite3 *db_conn) {
-        char *err_msg = NULL;
+    char *err_msg = NULL;
 
     if (db_conn == NULL) {
         fprintf(stdout, "Error opening db conn: %s\n", sqlite3_errmsg(db_conn));
@@ -90,7 +89,6 @@ static void create_backuped_file_table(sqlite3 *db_conn) {
         fprintf(stdout, "Error opening db conn: %s\n", err_msg);
         return;
     }
-    printf("backup created");
 
 }
 
@@ -151,8 +149,7 @@ static char *location() {
 		exit(2);
 	}
     char *db_location = (char *)malloc(strlen(dbpath) + 13);
-    if (db_location == NULL)
-    {
+    if (db_location == NULL) {
         perror("Error allocating db store path str");
         exit(2);
     }
@@ -160,6 +157,31 @@ static char *location() {
     strcat(db_location, "/updt.db");
 
     return db_location;
+}
+
+static int watched_paths(sqlite3 *conn) {
+    int rc = 0;
+    int count = 0;
+    sqlite3_stmt *stmt;
+    const char *count_sql = "SELECT COUNT(id) FROM compfilespaths;";
+
+    if (conn == NULL) {
+        perror("Error connecting to db");
+        return 2;
+    }
+
+    rc = sqlite3_prepare_v2(conn, count_sql,-1,&stmt,0);
+    if (rc != SQLITE_OK) {
+        fprintf(stdout, "error prep count sql: %s", sqlite3_errmsg(conn));
+        return 2;
+    }
+
+    if (sqlite3_step(stmt) == SQLITE_ROW) {
+        count = sqlite3_column_int(stmt, 0);
+        sqlite3_finalize(stmt);
+        return count;
+    }
+    return 2;
 }
 
 #endif

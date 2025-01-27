@@ -1,10 +1,7 @@
 #include <stdlib.h>
-#include "./includes/db.h"
-#include "args.c"
-#include "watchLocations.c"
+#include "entry.c"
 
 int main(int argc, char *argv[]) {
-    db_init();
-    writeArgs(argc, argv);
-    traverseAll();
+	entrypoint(argc, argv);
+	return EXIT_SUCCESS;
 }

@@ -1,4 +1,4 @@
-/*
+/* 
  * =====================================================================================
  *
  *       Filename:  watchLocations.c
@@ -24,16 +24,15 @@
 #include "./includes/store_location.h"
 #include "./includes/db.h"
 
-char **returnPath();
-void traverseAll();
-void traverseSingle(sqlite3 *conn, char *path);
-char *loc();
+static char **returnPath(void);
+void traverseAll(void);
+static void traverseSingle(sqlite3 *conn, char *path);
+static char *loc(void);
 
-static int file_count = 0;
 
 // read watch file
 // returns array with paths to traverse
-char **returnPath() {
+static char **returnPath(void) {
 	FILE *file;
 	char *lc = loc();
 	int count = 0;
@@ -89,12 +88,13 @@ char **returnPath() {
 	fclose(file);
 	free(lc);
 	return paths;
+
 }
 
 // traverse all watch locations
 // gets input from returnPath()
 // save in db
-void traverseAll() {
+void traverseAll(void) {
 	sqlite3 *conn = open_db();
 	int len = 0;
 	char **paths = returnPath();
@@ -106,13 +106,14 @@ void traverseAll() {
 	for (int i = 0; i < len; i++) {
 		traverseSingle(conn, paths[i]);
 	}
+	printf("currently tracking: %d files\n",watched_paths(conn));
 	sqlite3_close(conn);
-	printf("noted %d files\n",file_count);
+
 }
 
 // traverse single location from the watch
 // gets a single path from traverse all
-void traverseSingle(sqlite3 *conn, char *path) {
+static void traverseSingle(sqlite3 *conn, char *path) {
 	DIR *dir;
 	struct dirent *entry;	
 	struct stat st;
@@ -138,7 +139,6 @@ void traverseSingle(sqlite3 *conn, char *path) {
 		if (S_ISREG(st.st_mode)) {
 			//printf("%s\n",pth);
 			insert_compfiles(conn, pth,&st.st_mtime, (double)st.st_size/(1024 * 1024));
-			file_count++;
 		}
 		if (S_ISDIR(st.st_mode)) {
 			traverseSingle(conn, pth);
@@ -149,7 +149,7 @@ void traverseSingle(sqlite3 *conn, char *path) {
 }
 
 // read path from createLocation()
-char *loc() {
+static char *loc(void) {
 	const char *location = create_location();
 	char *lc = (char*)malloc(13 * sizeof(char));
 	if (lc == NULL) {
@@ -160,4 +160,5 @@ char *loc() {
 	strcpy(lc, location);
 	strcat(lc, "/watch");
 	return lc;
+	
 }
