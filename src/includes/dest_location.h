@@ -21,7 +21,7 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <string.h>
-
+#include <sys/statvfs.h>
 #include "source_location.h"
 
 #ifndef DEST_LOCATION_H
@@ -29,6 +29,9 @@
 
 char **backup_locations();
 char *prefered();
+void write_prefered();
+static void remaining(char *path);
+
 // returns backup locations
 char **backup_locations() {
     char **path = NULL;
@@ -92,6 +95,7 @@ char *prefered() {
     } else if (len == 1) {
         strcat(pref, paths[0]);
         printf("only found \033[1m%s\033[0m, will be used by default\n", pref);
+        remaining(pref);
         return pref;
     } else {
         printf("Choose your prefered location by picking the no accociated\n");
@@ -125,4 +129,18 @@ void write_prefered() {
     fprintf(file, "%s\n", pref);
     free(pref_file);
 }
+
+// check backup space available
+static void remaining(char *path) {
+
+    struct statvfs stat;
+    if (statvfs(path, &stat) != 0) {
+        perror("statvfs err");
+        return;
+    }
+
+    unsigned long long free_space = stat.f_bavail * stat.f_bsize;
+    printf("\t and has \033[1m%lld GB\033[0m free\n", free_space / (1024*1024*1024));
+}
+
 #endif 
