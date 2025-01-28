@@ -21,7 +21,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "./includes/store_location.h"
+#include "./includes/source_location.h"
 
 int isPathValid(char *path);
 int isPathAlreadyWatched(char *path, char *fileLocation);

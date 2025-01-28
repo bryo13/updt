@@ -4,7 +4,7 @@
  *       Filename:  store_location.c
  *
  *    Description: create a dir in the home dir that
- *                 will be used to store db
+ *                 will be used to house source config
  *
  *        Version:  1.0
  *        Created:  01/19/2025 10:08:00 PM

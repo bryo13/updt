@@ -24,7 +24,7 @@
 #include <stdio.h>
 #include <sqlite3.h>
 #include <string.h>
-#include "store_location.h"
+#include "source_location.h"
 
 sqlite3 *open_db();
 void db_init();

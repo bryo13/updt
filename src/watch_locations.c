@@ -21,7 +21,7 @@
 #include <string.h>
 #include <dirent.h>
 #include <sys/stat.h>
-#include "./includes/store_location.h"
+#include "./includes/source_location.h"
 #include "./includes/db.h"
 
 static char **returnPath(void);

@@ -20,7 +20,7 @@
 #include <criterion/criterion.h>
 #include <sys/stat.h>
 #include <stdbool.h>
-#include "../src/includes/store_location.h"
+#include "../src/includes/source_location.h"
 #include "../src/includes/db.h"
 #include "../src/watch_args.c"
 
