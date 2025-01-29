@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -g -Wall -pedantic -Wextra 
 
-test: store_location.o db.o args.o tests.o
+test: source_location.o db.o watch_args.o tests.o
 	$(CC) $(CFLAGS) -o test tests.o -lcriterion -lsqlite3
 
 build: main.o
@@ -10,14 +10,14 @@ build: main.o
 main.o: src/main.c
 	$(CC) $(CFLAGS) -c src/main.c
 
-store_location.o: src/includes/store_location.h
-	$(CC) $(CFLAGS) -c src/includes/store_location.h
+source_location.o: src/includes/source_location.h
+	$(CC) $(CFLAGS) -c src/includes/source_location.h
 	
-args.o: src/args.c
-	$(CC) $(CFLAGS) -c src/args.c
+watch_args.o: src/watch_args.c
+	$(CC) $(CFLAGS) -c src/watch_args.c
 
-db.o: src/db.c
-	$(CC) $(CFLAGS) -c src/db.c
+db.o: src/includes/db.h
+	$(CC) $(CFLAGS) -c src/includes/db.h
 
 tests.o: tests/tests.c
 	$(CC) $(CFLAGS) -c tests/tests.c

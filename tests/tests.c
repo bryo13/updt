@@ -23,16 +23,15 @@
 #include "../src/includes/source_location.h"
 #include "../src/includes/db.h"
 #include "../src/watch_args.c"
+#include "../src/compare.c"
 
 // test homepath
-Test(store_location, TestHomeDir)
-{
+Test(store_location, TestHomeDir) {
 	const char *homePath = homepath();
 	cr_assert_str_eq(homePath, "/home/brian");
 }
 
-Test(store_location, TestMakeDir)
-{
+Test(store_location, TestMakeDir) {
 	struct stat sbuf;
 	create_location();
 	char path[] = "/home/brian/.updt";
@@ -41,11 +40,22 @@ Test(store_location, TestMakeDir)
 	cr_assert_eq(dirExists, 0, "%s does not exist", path);
 }
 
-Test(db, CreateDB)
-{
+Test(db, CreateDB) {
 	struct stat sbuf;
-	create_db();
+	db_init();
 	char db_path[] = "/home/brian/.updt/updt.db";
 	bool dbExists = stat(db_path, &sbuf);
 	cr_assert_eq(dbExists, 0, "%s does not exist", db_path);
+}
+
+Test(compare, StripPath) {
+	char *path = "/media/brian/Documents";
+	char *path1 = "/home/brian/Documents";
+	char *get_striped1 = strip_path(path);
+	char *get_striped2 = strip_path(path1);
+	cr_assert_not_null(get_striped1);
+	cr_assert_not_null(get_striped2);
+
+	cr_assert_str_eq(get_striped1,"/Documents","Couldnt get unmatched");
+	cr_assert_str_eq(get_striped2,"/Documents","Couldnt get unmatched");
 }
