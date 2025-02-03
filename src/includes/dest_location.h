@@ -105,12 +105,16 @@ char *prefered() {
         printf("%d for %s\n",i+1,paths[i]);
     }
     free(paths);
-    return "";
+    return NULL;
 }
 
 // write prefered
 void write_prefered() {
     char *pref = prefered();
+    if (pref == NULL) {
+        perror("Cant read backup location");
+        return;
+    }
     FILE *file;
     const char *loc = create_location();
     char *pref_file = (char*)malloc(128 * sizeof(char));
@@ -120,14 +124,16 @@ void write_prefered() {
     }
     strcpy(pref_file, loc);
     strcat(pref_file, "/pref");
-    printf("%s\n",pref_file);
+
     if ((file = fopen(pref_file, "w")) == NULL) {
         perror("Error opening file");
+        fclose(file);
         return;
     }
 
     fprintf(file, "%s\n", pref);
     free(pref_file);
+    fclose(file);
 }
 
 // check backup space available

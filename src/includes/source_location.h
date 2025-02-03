@@ -79,9 +79,16 @@ const char *create_location(void) {
 	return NULL;
 }
 
-// write backup location
-char *backup_location(void) {
-	return "";
-}
-
+// where to write pref location
+const char *pref_loc(){
+	const char *hm = homepath();
+	char *pb = (char*)malloc(128 * sizeof(char));
+	if (pb == NULL) {
+		perror("prefered backup mem aloc err");
+		return NULL;
+	}
+	strcpy(pb,hm);
+	strcat(pb, "/.updt/pref");
+	return pb;
+} 
 #endif

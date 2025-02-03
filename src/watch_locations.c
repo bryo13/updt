@@ -26,7 +26,7 @@
 
 static char **returnPath(void);
 void traverseAll(void);
-static void traverseSingle(sqlite3 *conn, char *path);
+static void traverse_incompfiles(sqlite3 *conn, char *path);
 static char *loc(void);
 
 
@@ -104,7 +104,7 @@ void traverseAll(void) {
 	}
 
 	for (int i = 0; i < len; i++) {
-		traverseSingle(conn, paths[i]);
+		traverse_incompfiles(conn, paths[i]);
 	}
 	printf("currently tracking: %d files\n",watched_paths(conn));
 	sqlite3_close(conn);
@@ -113,7 +113,7 @@ void traverseAll(void) {
 
 // traverse single location from the watch
 // gets a single path from traverse all
-static void traverseSingle(sqlite3 *conn, char *path) {
+static void traverse_incompfiles(sqlite3 *conn, char *path) {
 	DIR *dir;
 	struct dirent *entry;	
 	struct stat st;

@@ -113,7 +113,7 @@ static void insert(sqlite3 *conn,char *tablename, char *path, long int *date_mod
 	}
 
 	char makeQuery[1024];
-	snprintf(makeQuery, sizeof(makeQuery), "INSERT INTO %s (path, data_modified, size) values(?,?,?);", tablename);
+	snprintf(makeQuery, sizeof(makeQuery), "INSERT OR IGNORE INTO %s (path, data_modified, size) values(?,?,?);", tablename);
 	query_result = sqlite3_prepare_v2(conn, makeQuery, -1, &stmt, NULL);
 	if (query_result != SQLITE_OK) {
 		fprintf(stdout, "error prep insert query: %s\n",sqlite3_errmsg(conn));

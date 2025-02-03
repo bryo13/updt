@@ -59,3 +59,16 @@ Test(compare, StripPath) {
 	cr_assert_str_eq(get_striped1,"/Documents","Couldnt get unmatched");
 	cr_assert_str_eq(get_striped2,"/Documents","Couldnt get unmatched");
 }
+
+Test(compare, Traverse) {
+	char *location = "/media/brian/BriansAge";
+	char **paths = traverse(location);
+	cr_assert_not_null(paths, " paths should contain subpaths");
+	free(paths);
+}
+
+Test(compare, QueryEntries) {
+	char **entries = query_entries();
+	cr_assert_not_null(entries, " entries should contain subpaths");
+	free(entries);
+}
