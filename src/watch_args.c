@@ -21,7 +21,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "./includes/source_location.h"
+#include <sys/stat.h>
+#include "../include/source_location.h"
 
 int isPathValid(char *path);
 int isPathAlreadyWatched(char *path, char *fileLocation);
@@ -92,11 +93,9 @@ void writeArgs(int argCount, char *argVect[]) {
 }
 
 // check if path is valid
-int isPathValid(char *path)
-{
+int isPathValid(char *path) {
     struct stat sbuf;
-    if (stat(path, &sbuf) == 0)
-    {
+    if (stat(path, &sbuf) == 0) {
         return 0;
     }
     printf("- \033[31m%s does not exist\033[0m\n", path);

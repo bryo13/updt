@@ -22,8 +22,8 @@
 #include <unistd.h>
 #include "watch_args.c"
 #include "watch_locations.c"
-#include "./includes/db.h"
-#include "./includes/dest_location.h"
+#include "../include/db.h"
+#include "../include/dest_location.h"
 
 static void explainer(void);
 static void checkdb_exists(void);

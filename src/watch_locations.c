@@ -21,8 +21,8 @@
 #include <string.h>
 #include <dirent.h>
 #include <sys/stat.h>
-#include "./includes/source_location.h"
-#include "./includes/db.h"
+#include "../include/source_location.h"
+#include "../include/db.h"
 
 static char **returnPath(void);
 void traverseAll(void);
@@ -141,7 +141,7 @@ static void traverse_incompfiles(sqlite3 *conn, char *path) {
 			insert_compfiles(conn, pth,&st.st_mtime, (double)st.st_size/(1024 * 1024));
 		}
 		if (S_ISDIR(st.st_mode)) {
-			traverseSingle(conn, pth);
+			traverse_incompfiles(conn, pth);
 		}
 		 
 	}

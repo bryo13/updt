@@ -23,12 +23,10 @@
 #include <sqlite3.h>
 #include <string.h>
 
-#include "./includes/source_location.h"
-#include "./includes/db.h"
+#include "../include/source_location.h"
+#include "../include/db.h"
 
 char *strip_path(char *path);
-static char *read_backup_location();
-void compare_paths();
 static char *read_backup_location();
 
 // strip location from path i.e /media/brian or /home/brian

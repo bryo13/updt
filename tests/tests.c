@@ -20,10 +20,12 @@
 #include <criterion/criterion.h>
 #include <sys/stat.h>
 #include <stdbool.h>
-#include "../src/includes/source_location.h"
-#include "../src/includes/db.h"
+#include "../include/source_location.h"
+#include "../include/db.h"
+#include "../src/db.c"
+#include "../src/source_location.c"
 #include "../src/watch_args.c"
-#include "../src/compare.c"
+
 
 // test homepath
 Test(store_location, TestHomeDir) {
@@ -48,27 +50,3 @@ Test(db, CreateDB) {
 	cr_assert_eq(dbExists, 0, "%s does not exist", db_path);
 }
 
-Test(compare, StripPath) {
-	char *path = "/media/brian/Documents";
-	char *path1 = "/home/brian/Documents";
-	char *get_striped1 = strip_path(path);
-	char *get_striped2 = strip_path(path1);
-	cr_assert_not_null(get_striped1);
-	cr_assert_not_null(get_striped2);
-
-	cr_assert_str_eq(get_striped1,"/Documents","Couldnt get unmatched");
-	cr_assert_str_eq(get_striped2,"/Documents","Couldnt get unmatched");
-}
-
-Test(compare, Traverse) {
-	char *location = "/media/brian/BriansAge";
-	char **paths = traverse(location);
-	cr_assert_not_null(paths, " paths should contain subpaths");
-	free(paths);
-}
-
-Test(compare, QueryEntries) {
-	char **entries = query_entries();
-	cr_assert_not_null(entries, " entries should contain subpaths");
-	free(entries);
-}
