@@ -22,7 +22,8 @@
 #include <stdbool.h>
 #include <string.h>
 #include <sys/stat.h>
-#include "../include/source_location.h"
+
+#include "source_location.h"
 
 // returns home dir
 const char *homepath(void) {

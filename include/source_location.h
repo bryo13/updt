@@ -15,7 +15,7 @@
  *   Organization:
  *
  * =====================================================================================
- */
+*/
 
 #ifndef STORE_LOCATION_H
 #define STORE_LOCATION_H

@@ -15,15 +15,13 @@
  *   Organization:
  *
  * =====================================================================================
- */
+*/
 
 #include <criterion/criterion.h>
 #include <sys/stat.h>
 #include <stdbool.h>
 #include "../include/source_location.h"
 #include "../include/db.h"
-#include "../src/db.c"
-#include "../src/source_location.c"
 #include "../src/watch_args.c"
 
 
@@ -49,4 +47,3 @@ Test(db, CreateDB) {
 	bool dbExists = stat(db_path, &sbuf);
 	cr_assert_eq(dbExists, 0, "%s does not exist", db_path);
 }
-

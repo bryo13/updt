@@ -14,7 +14,7 @@
  *   Organization:  
  *
  * =====================================================================================
- */
+*/
 #include <stdlib.h>
 #include <regex.h>
 #include <string.h>
@@ -23,8 +23,8 @@
 #include <sqlite3.h>
 #include <string.h>
 
-#include "../include/source_location.h"
-#include "../include/db.h"
+#include "source_location.h"
+#include "db.h"
 
 char *strip_path(char *path);
 static char *read_backup_location();

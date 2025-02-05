@@ -21,17 +21,18 @@
 #include <stdio.h>
 #include <sqlite3.h>
 #include <string.h>
-#include "../include/source_location.h"
-#include "../include/db.h"
+#include "source_location.h"
+#include "db.h"
 
-void db_init() {
+
+void db_init(void) {
     sqlite3 *db_conn = open_db();
     create_compfile_table(db_conn);
     create_backuped_file_table(db_conn);
     sqlite3_close(db_conn);
 }
 
-sqlite3 *open_db() {
+sqlite3 *open_db(void) {
     char *lc = location();
     sqlite3 *db = NULL;
 
@@ -131,7 +132,7 @@ void insert(sqlite3 *conn,char *tablename, char *path, long int *date_modified, 
 }
 
 // db location
-char *location() {
+char *location(void) {
     const char *dbpath = create_location();
     if (dbpath == NULL) {
 		perror("err getting home path");

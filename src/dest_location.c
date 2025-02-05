@@ -22,8 +22,9 @@
 #include <dirent.h>
 #include <string.h>
 #include <sys/statvfs.h>
-#include "../include/dest_location.h"
-#include "../include/source_location.h"
+
+#include "dest_location.h"
+#include "source_location.h"
 
 // returns backup locations
 char **backup_locations(void) {

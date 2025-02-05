@@ -1,7 +1,7 @@
 /* 
  * =====================================================================================
  *
- *       Filename:  watchLocations.c
+ *       Filename:  watch_locations.c
  *
  *    Description: The dir one wants to watch, the files and sub dir are stored in sqlite
  *    		        table as paths
@@ -21,18 +21,34 @@
 #include <string.h>
 #include <dirent.h>
 #include <sys/stat.h>
-#include "../include/source_location.h"
-#include "../include/db.h"
 
-static char **returnPath(void);
-void traverseAll(void);
-static void traverse_incompfiles(sqlite3 *conn, char *path);
-static char *loc(void);
+#include "source_location.h"
+#include "db.h"
+#include "watch_locations.h"
 
+// traverse all watch locations
+// gets input from returnPath()
+// save in db
+void traverse_all(void) {
+	sqlite3 *conn = open_db();
+	int len = 0;
+	char **paths = returnPath();
+
+	while(paths[len] != NULL) {
+		len++;
+	}
+
+	for (int i = 0; i < len; i++) {
+		traverse_incompfiles(conn, paths[i]);
+	}
+	printf("currently tracking: %d files\n",watched_paths(conn));
+	sqlite3_close(conn);
+
+}
 
 // read watch file
 // returns array with paths to traverse
-static char **returnPath(void) {
+char **returnPath(void) {
 	FILE *file;
 	char *lc = loc();
 	int count = 0;
@@ -91,34 +107,13 @@ static char **returnPath(void) {
 
 }
 
-// traverse all watch locations
-// gets input from returnPath()
-// save in db
-void traverseAll(void) {
-	sqlite3 *conn = open_db();
-	int len = 0;
-	char **paths = returnPath();
-
-	while(paths[len] != NULL) {
-		len++;
-	}
-
-	for (int i = 0; i < len; i++) {
-		traverse_incompfiles(conn, paths[i]);
-	}
-	printf("currently tracking: %d files\n",watched_paths(conn));
-	sqlite3_close(conn);
-
-}
-
 // traverse single location from the watch
 // gets a single path from traverse all
-static void traverse_incompfiles(sqlite3 *conn, char *path) {
+void traverse_incompfiles(sqlite3 *conn, char *path) {
 	DIR *dir;
 	struct dirent *entry;	
 	struct stat st;
 
-	
 	if (!(dir = opendir(path)))
 	{
 		return;
@@ -149,7 +144,7 @@ static void traverse_incompfiles(sqlite3 *conn, char *path) {
 }
 
 // read path from createLocation()
-static char *loc(void) {
+char *loc(void) {
 	const char *location = create_location();
 	char *lc = (char*)malloc(13 * sizeof(char));
 	if (lc == NULL) {

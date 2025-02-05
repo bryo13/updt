@@ -22,11 +22,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
-#include "../include/source_location.h"
 
-int isPathValid(char *path);
-int isPathAlreadyWatched(char *path, char *fileLocation);
-void writeArgs(int argCount, char *argVect[]);
+#include "source_location.h"
+#include "watch_args.h"
 
 // writes location/s to watch
 void writeArgs(int argCount, char *argVect[]) {
@@ -105,9 +103,7 @@ int isPathValid(char *path) {
 // check if file is already checked
 int isPathAlreadyWatched(char *path, char *fileLocation) {
     FILE *file;
-
     char read[256]; 
-
     if ((file = fopen(fileLocation, "r")) == NULL) {
         perror("error getting watch file");
         return 1;

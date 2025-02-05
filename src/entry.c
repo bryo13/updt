@@ -20,15 +20,12 @@
 #include <string.h>
 #include <sys/stat.h>
 #include <unistd.h>
-#include "watch_args.c"
-#include "watch_locations.c"
-#include "../include/db.h"
-#include "../include/dest_location.h"
 
-static void explainer(void);
-static void checkdb_exists(void);
-static void watch_init(int length, char *vec[]);
-static void backup(void);
+#include "watch_args.h"
+#include "watch_locations.h"
+#include "db.h"
+#include "dest_location.h"
+#include "entry.h"
 
 void entrypoint(int argc, char *argv[]) {
 	checkdb_exists();
@@ -44,7 +41,7 @@ void entrypoint(int argc, char *argv[]) {
 	}
 }
 
-static void explainer(void) {
+void explainer(void) {
 	printf("\033[34m No args were noted, available options include:\033[0m\n");
 	printf("\033[34m    --watch location sets the location to be watched \n \ti.e ./updt --watch Documents\033[0m\n");
 	printf("\033[34m    --unwatch removes watched location \n \t i.e ./updt --unwatch Documents\033[0m\n \t\033[31m cant be reversed and all config will be start from scratch\033[0m\n");
@@ -52,7 +49,7 @@ static void explainer(void) {
 
 }
 
-static void checkdb_exists(void) {
+void checkdb_exists(void) {
 	struct stat pth, dpth;
 	char path[] = "/home/brian/.updt";
 	char db_path[] = "/home/brian/.updt/updt.db";
@@ -64,12 +61,12 @@ static void checkdb_exists(void) {
 	}
 }
 
-static void watch_init(int length, char *vec[]) {
+void watch_init(int length, char *vec[]) {
 	writeArgs(length, vec);	
-	traverseAll();
+	traverse_all();
 }
 
 // choose backup location
-static void backup(void) {
+void backup(void) {
 	write_prefered();
 }

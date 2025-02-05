@@ -22,6 +22,8 @@
 #include <sqlite3.h>
 #include <dirent.h>
 
+#include "source_location.h"
+
 char *remove_prefix(char *path);
 char *read_backup_location();
 char *watched_files(sqlite3 *conn, char *path);
@@ -71,7 +73,7 @@ char *remove_prefix(char *path) {
 
 // know which files to watch
 char *watched_files(sqlite3 *conn, char *path) {
-	
+	return "";	
 }
 
 void watch_all() {}
