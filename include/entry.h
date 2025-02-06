@@ -21,21 +21,29 @@
 #define ENTRY_H
 
 /*
-    explainer shows available commands or unknown commands
- */
+explainer shows available commands or unknown commands
+*/
 void explainer(void);
 
-// helper function that checks if a db is already created
+/*
+helper function that checks if a db is already created
+*/
 void checkdb_exists(void);
 
-// helper function that records dir/s one wants to watch for
-// and records them
+/*helper function that records dir/s one wants to watch for
+and records them
+*/
 void watch_init(int length, char *vec[]);
 
-// helps the user choose a backup location and notes it
+/*
+helps the user choose a backup location and notes it
+*/
 void backup(void);
 
-// user interactions handled here -> reception
+/*
+user interactions handled here -> reception
+*/
 void entrypoint(int argc, char *argv[]);
+
 
 #endif

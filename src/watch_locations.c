@@ -114,8 +114,7 @@ void traverse_incompfiles(sqlite3 *conn, char *path) {
 	struct dirent *entry;	
 	struct stat st;
 
-	if (!(dir = opendir(path)))
-	{
+	if (!(dir = opendir(path))) {
 		return;
 	}
 	while((entry = readdir(dir)) != NULL) {

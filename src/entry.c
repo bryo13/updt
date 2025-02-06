@@ -26,6 +26,7 @@
 #include "db.h"
 #include "dest_location.h"
 #include "entry.h"
+#include "backup_files.h"
 
 void entrypoint(int argc, char *argv[]) {
 	checkdb_exists();
@@ -35,6 +36,8 @@ void entrypoint(int argc, char *argv[]) {
 		watch_init(argc, argv);
 	} else if ((strcmp(argv[1],"--backup-location") == 0)) {
 		backup();
+	} else if ((strcmp(argv[1],"--update-backup") == 0)){
+		check_all();
 	} else {
 		printf("- couldnt find %s command\n",argv[1]);
 		explainer();
@@ -42,11 +45,11 @@ void entrypoint(int argc, char *argv[]) {
 }
 
 void explainer(void) {
-	printf("\033[34m No args were noted, available options include:\033[0m\n");
+	printf("\033[35m No args were noted, available options include:\033[0m\n");
 	printf("\033[34m    --watch location sets the location to be watched \n \ti.e ./updt --watch Documents\033[0m\n");
 	printf("\033[34m    --unwatch removes watched location \n \t i.e ./updt --unwatch Documents\033[0m\n \t\033[31m cant be reversed and all config will be start from scratch\033[0m\n");
-	printf("\033[34m    --backup-location chooses backup location \n \t i.e ./updt --backup-location \n");
-
+	printf("\033[34m    --backup-location chooses backup location \n \t i.e ./updt --backup-location\033[0m\n");
+	printf("\033[34m    --update-backup updates records updated \n \t i.e ./updt --update-backup\033[0m\n");
 }
 
 void checkdb_exists(void) {
